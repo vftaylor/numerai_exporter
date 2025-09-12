@@ -1,0 +1,2 @@
+numerapi==2.20.7
+prometheus-client==0.22.1
