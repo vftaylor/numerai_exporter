@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.12-slim-bookworm
 
 ARG GIT_SHA
 ENV GIT_SHA=$GIT_SHA
