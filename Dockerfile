@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.13
 
 ARG GIT_SHA
 ENV GIT_SHA=$GIT_SHA
@@ -22,4 +22,4 @@ COPY . .
 
 USER appuser
 
-CMD command: ["python", "main.py"]
+ENTRYPOINT ["python", "main.py"]
