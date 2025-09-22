@@ -19,7 +19,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:latest
+      run: docker build . --file Dockerfile --tag vftaylor/numerai_exporter:latest
 
     - name: Push the Docker image
       run: docker push vftaylor/numerai_exporter:latest
