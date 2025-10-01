@@ -3,6 +3,11 @@
 To authenticate the exporter to your Numerai account, you need to generate a Numerai API key and set it via 
 the `NUMERAI_PUBLIC_ID`/`NUMERAI_SECRET` environment variables.
 
+Create an API key at https://signals.numer.ai/account with the following scopes:
+
+- read_submission_info
+- read_user_info
+
 ## NOTE
 
 Project currently only supports getting general Numerai metrics and Signals tournament metrics. Pull requests welcome to support other tournaments.
