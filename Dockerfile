@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.13
 
 ARG GIT_SHA
 ENV GIT_SHA=$GIT_SHA
@@ -21,3 +21,5 @@ RUN pip3 install --upgrade pip && \
 COPY . .
 
 USER appuser
+
+ENTRYPOINT ["python", "main.py"]
