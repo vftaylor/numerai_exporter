@@ -25,6 +25,11 @@ class SignalsMetrics(MetricsBaseClass):
     def _setup_metrics(self) -> None:
         self.latest_round_gauge = Gauge(f'{self.metrics_prefix}_latest_round', 'Latest round')
 
+        # general metrics
+        self.round_open = Gauge(
+            f'{self.metrics_prefix}_round_open', 'Whether a signals round is currently open'
+        )
+
         # metrics for individual rounds
         self.percentiles_gauge = Gauge(
             f'{self.metrics_prefix}_score_percentile', 'Percentiles for a score',
@@ -194,6 +199,9 @@ class SignalsMetrics(MetricsBaseClass):
     def set_metrics(self) -> None:
         latest_round = self.numerai_api.get_latest_round()
         self.latest_round_gauge.set(int(latest_round))
+
+        round_open = self.numerai_api.check_round_open()
+        self.round_open.set(int(round_open))
 
         models = self.numerai_api.list_models()
         logging.info(f'Generating {self.tournament} metrics for {len(models.keys())} models.')
