@@ -52,6 +52,9 @@ class SignalsMetrics(MetricsBaseClass):
         self.at_risk_gauge = Gauge(
             f'{self.metrics_prefix}_at_risk', 'At-risk capital', ['model', 'round', 'status']
         )
+        self.turnover_gauge = Gauge(
+            f'{self.metrics_prefix}_turnover', 'Turnover', ['model', 'round', 'status']
+        )
 
         # mean metrics of rounds
         self.percentiles_mean_gauge = Gauge(
@@ -75,6 +78,9 @@ class SignalsMetrics(MetricsBaseClass):
         self.at_risk_mean_gauge = Gauge(
             f'{self.metrics_prefix}_at_risk_mean', 'Mean of at-risk capital', ['model', 'period', 'status']
         )
+        self.turnover_mean_gauge = Gauge(
+            f'{self.metrics_prefix}_turnover_mean', 'Mean of turnover', ['model', 'period', 'status']
+        )
 
     def _calculate_round_metrics(self, model_name: str, round_data: dict) -> None:
         submission_scores = round_data['submissionScores']
@@ -88,6 +94,7 @@ class SignalsMetrics(MetricsBaseClass):
         status = RoundState.RESOLVED if round_data['roundResolved'] else RoundState.UNRESOLVED
         payout_pending = submission_scores[0]['payoutPending']  # this is duplicated for all metrics so take first one
         payout_settled = submission_scores[0]['payoutSettled']  # this is duplicated for all metrics so take first one
+        turnover = round_data['prevWeekTurnoverMax']
 
         for score, value in scores.items():
             if value is not None:
@@ -130,10 +137,17 @@ class SignalsMetrics(MetricsBaseClass):
                 model=model_name, round=round_number, status=status
             ).set(float(payout_factor))
 
+        if turnover:
+            self.turnover_gauge.labels(
+                model=model_name, round=round_number, status=status
+            ).set(float(turnover))
+
     def _calculate_round_mean_metrics(self, round_performance_mapping: dict, model_name: str, status: str, period: int)\
             -> None:
         period_name = f'{period}d' if period != -1 else 'all'
-        values_map, percentiles_map, payout_factor_map, at_risk_map = generate_data_mean_maps(round_performance_mapping)
+        values_map, percentiles_map, payout_factor_map, at_risk_map, turnover_map = (
+            generate_data_mean_maps(round_performance_mapping)
+        )
 
         for score, values in percentiles_map[status].items():
             mean_calc = mean_for_period(values, period, RoundingDP.ONE)
@@ -153,6 +167,7 @@ class SignalsMetrics(MetricsBaseClass):
         mpc_mean = mean_for_period(values_map[status]['mpc'], period, RoundingDP.FOUR)
         payout_factor_mean = mean_for_period(payout_factor_map[status], period, RoundingDP.FOUR)
         at_risk_mean = mean_for_period(at_risk_map[status], period, RoundingDP.FOUR)
+        turnover_mean = mean_for_period(turnover_map[status], period, RoundingDP.FOUR)
 
         if alpha_mean is not None and mpc_mean is not None and payout_factor_mean is not None:
             payout_ratio_ex_pf = calculate_payout_ratio_ex_pf(alpha_mean, mpc_mean)
@@ -171,6 +186,10 @@ class SignalsMetrics(MetricsBaseClass):
         if payout_factor_mean is not None:
             self.payout_factor_mean_gauge.labels(model=model_name, period=period_name, status=status).set(float(
                 payout_factor_mean))
+
+        if turnover_mean is not None:
+            self.turnover_mean_gauge.labels(model=model_name, period=period_name, status=status).set(float(
+                turnover_mean))
 
     def set_metrics(self) -> None:
         latest_round = self.numerai_api.get_latest_round()

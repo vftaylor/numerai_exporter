@@ -19,7 +19,7 @@ def get_submission_scores(submission_scores: List) -> dict:
     return output
 
 
-def generate_data_mean_maps(data) -> Tuple[dict, dict, dict, dict]:
+def generate_data_mean_maps(data) -> Tuple[dict, dict, dict, dict, dict]:
     values_map = {
         RoundState.RESOLVED: defaultdict(list),
         RoundState.UNRESOLVED: defaultdict(list)
@@ -33,6 +33,10 @@ def generate_data_mean_maps(data) -> Tuple[dict, dict, dict, dict]:
         RoundState.UNRESOLVED: list()
     }
     at_risk_map = {
+        RoundState.RESOLVED: list(),
+        RoundState.UNRESOLVED: list()
+    }
+    turnover_map = {
         RoundState.RESOLVED: list(),
         RoundState.UNRESOLVED: list()
     }
@@ -53,7 +57,10 @@ def generate_data_mean_maps(data) -> Tuple[dict, dict, dict, dict]:
         if v.get('atRisk'):
             at_risk_map[status].append(Decimal(v['atRisk']))
 
-    return values_map, percentiles_map, payout_factor_map, at_risk_map
+        if v.get('prevWeekTurnoverMax'):
+            turnover_map[status].append(Decimal(v['prevWeekTurnoverMax']))
+
+    return values_map, percentiles_map, payout_factor_map, at_risk_map, turnover_map
 
 
 def mean_for_period(values: list, period: int, round_dp: int) -> Decimal | None:
