@@ -13,7 +13,7 @@ Image available at: https://hub.docker.com/r/vftaylor/numerai_exporter
 
 ## Run using Docker
 
-    docker run -e NUMERAI_PUBLIC_ID=<PUBLIC_ID> -e NUMERAI_SECRET=<SECRET> vftaylor/numerai_exporter
+    docker run -e NUMERAI_PUBLIC_ID=<PUBLIC_ID> -e NUMERAI_SECRET=<SECRET> vftaylor/numerai_exporter:latest
 
 ## Run using Kubernetes
 
