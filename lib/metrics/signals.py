@@ -206,6 +206,11 @@ class SignalsMetrics(MetricsBaseClass):
         models = self.numerai_api.list_models()
         logging.info(f'Generating {self.tournament} metrics for {len(models.keys())} models.')
 
+        # metrics go stale periodically e.g. when a round goes from unresolved to resolved. but prometheus does not have
+        # a good story for clearing stale metrics. so we clear all before regenerating each time
+        self.payout_ratio_gauge.clear()
+        self.payout_ratio_ex_pf_gauge.clear()
+
         for model_name, data in models.items():
             logging.info(f'Setting {self.tournament} metrics for {model_name}.')
             round_performance_mapping = self.numerai_api.get_round_performance_mapping(model_id=data['id'])
