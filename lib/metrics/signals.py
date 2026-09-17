@@ -11,7 +11,7 @@ from lib.helpers import generate_data_mean_maps, get_submission_scores, mean_for
 
 
 def calculate_payout_ratio_ex_pf(alpha: Decimal, mpc: Decimal) -> Decimal:
-    return Decimal('0.3') * alpha + Decimal('0.8') * mpc
+    return Decimal('0.5') * alpha + Decimal('2') * mpc
 
 
 class SignalsMetrics(MetricsBaseClass):
@@ -91,8 +91,8 @@ class SignalsMetrics(MetricsBaseClass):
         submission_scores = round_data['submissionScores']
         scores = get_submission_scores(submission_scores)
 
-        alpha_data = scores['alpha']
-        mpc_data = scores['mpc']
+        alpha_data = scores['neutral_corr']
+        mpc_data = scores['neutral_mmc']
         payout_factor = round_data['roundPayoutFactor']
         round_number = round_data['roundNumber']
         at_risk = round_data['atRisk']
@@ -168,8 +168,8 @@ class SignalsMetrics(MetricsBaseClass):
                     model=model_name, score_name=score, period=period_name, status=status
                 ).set(float(mean_calc))
 
-        alpha_mean = mean_for_period(values_map[status]['alpha'], period, RoundingDP.FOUR)
-        mpc_mean = mean_for_period(values_map[status]['mpc'], period, RoundingDP.FOUR)
+        alpha_mean = mean_for_period(values_map[status]['neutral_corr'], period, RoundingDP.FOUR)
+        mpc_mean = mean_for_period(values_map[status]['neutral_mmc'], period, RoundingDP.FOUR)
         payout_factor_mean = mean_for_period(payout_factor_map[status], period, RoundingDP.FOUR)
         at_risk_mean = mean_for_period(at_risk_map[status], period, RoundingDP.FOUR)
         turnover_mean = mean_for_period(turnover_map[status], period, RoundingDP.FOUR)
