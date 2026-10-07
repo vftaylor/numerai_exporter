@@ -3,6 +3,7 @@ from decimal import Decimal
 from statistics import mean
 from typing import List, Tuple
 #
+from config import RELEVANT_METRICS
 from lib.enums import RoundState
 
 
@@ -10,6 +11,9 @@ def get_submission_scores(submission_scores: List) -> dict:
     output = dict()
 
     for submission_score in submission_scores:
+        if submission_score['displayName'] not in RELEVANT_METRICS.split(','):
+            continue
+
         if submission_score['value'] and submission_score['percentile']:
             d = Decimal(submission_score['value']), round(Decimal(submission_score['percentile'] * 100), 1)
         else:

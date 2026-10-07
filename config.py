@@ -8,3 +8,4 @@ METRICS_UPDATE_FREQUENCY = int(os.getenv('METRICS_UPDATE_FREQUENCY', 300))
 NUMERAI_PUBLIC_ID = os.getenv('NUMERAI_PUBLIC_ID')
 NUMERAI_SECRET = os.getenv('NUMERAI_SECRET')
 RELEVANT_PERIODS = [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 60, 120, 250, -1]  # in days. -1 means all
+RELEVANT_METRICS = os.getenv('RELEVANT_METRICS', 'neutral_corr,neutral_mmc')
