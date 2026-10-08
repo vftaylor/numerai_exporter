@@ -61,8 +61,8 @@ def generate_data_mean_maps(data) -> Tuple[dict, dict, dict, dict, dict]:
         if v.get('atRisk'):
             at_risk_map[status].append(Decimal(v['atRisk']))
 
-        if v.get('prevWeekTurnoverMax'):
-            turnover_map[status].append(Decimal(v['prevWeekTurnoverMax']))
+        if v.get('prevWeekNeutralChurnMean'):
+            turnover_map[status].append(Decimal(v['prevWeekNeutralChurnMean']))
 
     return values_map, percentiles_map, payout_factor_map, at_risk_map, turnover_map
 

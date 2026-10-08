@@ -11,8 +11,7 @@ class Api(base_api.Api):
                 churnThreshold
                 corrMultiplier
                 mmcMultiplier
-                prevWeekChurnMax
-                prevWeekTurnoverMax
+                prevWeekNeutralChurnMean
                 roundResolved
                 roundNumber
                 roundPayoutFactor

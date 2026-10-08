@@ -99,7 +99,7 @@ class SignalsMetrics(MetricsBaseClass):
         status = RoundState.RESOLVED if round_data['roundResolved'] else RoundState.UNRESOLVED
         payout_pending = submission_scores[0]['payoutPending']  # this is duplicated for all metrics so take first one
         payout_settled = submission_scores[0]['payoutSettled']  # this is duplicated for all metrics so take first one
-        turnover = round_data['prevWeekTurnoverMax']
+        turnover = round_data['prevWeekNeutralChurnMean']
 
         for score, value in scores.items():
             if value is not None:
